@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="munit_HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="a11a2515-8380-43f1-9137-56ece2576cc0" >
+		<http:listener-connection host="0.0.0.0" port="8082" />
+	</http:listener-config>
+	<flow name="munit-test-apiFlow" doc:id="d4d1838b-383f-4642-8dd3-988d79ec04c9" >
+		<http:listener doc:name="Listener" doc:id="8a96b0af-0d44-47ea-9808-d82f3817be97" config-ref="munit_HTTP_Listener_config" path="/test"/>
+		<choice doc:name="Determine COVID status" doc:id="5839daf9-85c5-4d67-8573-69002a3af626" >
+			<when expression="#[attributes.queryParams.covidStatus=='positive']">
+				<set-payload value='{"message":"quarantine patient"}' doc:name="positive" doc:id="bdb2c338-4abd-4440-8532-c918e353ae43" />
+			</when>
+			<otherwise >
+				<set-payload value='{"message":"maintain social distancing"}' doc:name="negative" doc:id="d24e68ad-c1b4-4485-9561-4cf59af322a5" />
+			</otherwise>
+		</choice>
+	</flow>
+</mule>
